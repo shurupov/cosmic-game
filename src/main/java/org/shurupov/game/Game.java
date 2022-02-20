@@ -39,8 +39,8 @@ import org.shurupov.game.service.SkyService;
 
 public class Game {
 
-    private static final int WIDTH = 1400;
-    private static final int HEIGHT = 700;
+    private static final int WIDTH = 1800;
+    private static final int HEIGHT = 1000;
 
     private static final float WHK = ((float) WIDTH) / HEIGHT;
 
