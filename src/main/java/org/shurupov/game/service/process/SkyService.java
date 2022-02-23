@@ -1,4 +1,4 @@
-package org.shurupov.game.service;
+package org.shurupov.game.service.process;
 
 import org.shurupov.game.domain.Point;
 import org.shurupov.game.domain.Sky;
@@ -11,10 +11,6 @@ import static org.lwjgl.opengl.GL11.*;
 public class SkyService {
 
     private final Random random = new Random();
-
-    public Point createPoint() {
-        return new Point(random.nextFloat() * 2 - 1, random.nextFloat() * 2 - 1);
-    }
 
     public StarLayer createStarLayer(float lightness, float velocity, int count) {
         Point[] points = new Point[count];
