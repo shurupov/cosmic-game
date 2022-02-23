@@ -61,7 +61,7 @@ public class SkyService {
             for (int j = 0; j < layer.getPoints().length; j++) {
                 Point point = layer.getPoints()[j];
                 glBegin(GL_POINTS);
-                glVertex3f(point.getX(), point.getY(), 0.0f);
+                glVertex2f(point.getX(), point.getY());
                 glEnd();
             }
         }
