@@ -9,4 +9,6 @@ public interface Subscriber {
     default void onRender() {}
 
     default void onAfterUpdate() {}
+
+    default void onKeyPressed(int key) {}
 }

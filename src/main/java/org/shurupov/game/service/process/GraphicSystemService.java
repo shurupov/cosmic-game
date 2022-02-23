@@ -1,16 +1,20 @@
 package org.shurupov.game.service.process;
 
+import lombok.RequiredArgsConstructor;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
+import java.util.function.Consumer;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_EXTENSIONS;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+@RequiredArgsConstructor
 public class GraphicSystemService {
 
     private static final int WIDTH = 1800;
@@ -22,6 +26,8 @@ public class GraphicSystemService {
     private GLFWKeyCallback keyCallback;
 
     private long window;
+
+    private final Consumer<Integer> keyConsumer;
 
     public void init() {
         System.out.println("Hello LWJGL3 " + Version.getVersion() + "!");
@@ -42,6 +48,8 @@ public class GraphicSystemService {
         glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
+                keyConsumer.accept(key);
+
                 if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
                     glfwSetWindowShouldClose(window, GLFW_TRUE);
             }
@@ -81,14 +89,16 @@ public class GraphicSystemService {
     }
 
     public void gracefulShutdown() {
-
+        glfwDestroyWindow(window);
+        keyCallback.release();
     }
 
     public void forceShutdown() {
-
+        glfwTerminate();
+        errorCallback.release();
     }
 
-    public boolean isRequestedToClose() {
-        return glfwWindowShouldClose(window) == GLFW_TRUE;
+    public boolean isConditionToContinue() {
+        return glfwWindowShouldClose(window) == GLFW_FALSE;
     }
 }

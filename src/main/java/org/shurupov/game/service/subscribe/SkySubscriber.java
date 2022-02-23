@@ -14,6 +14,7 @@ public class SkySubscriber implements Subscriber {
 
     @Override
     public void onInit() {
+        //TODO Move this to properties file
         sky = skyService.createSky(10, 150,
             0.9f, 0.2f,
             0.008f, 0.0001f,

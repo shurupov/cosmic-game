@@ -1,16 +1,18 @@
 package org.shurupov.game.service.process;
 
+import lombok.RequiredArgsConstructor;
 import org.shurupov.game.domain.Point;
 import org.shurupov.game.domain.Sky;
 import org.shurupov.game.domain.StarLayer;
 
 import java.util.Random;
 
-import static org.lwjgl.opengl.GL11.*;
-
+@RequiredArgsConstructor
 public class SkyService {
 
     private final Random random = new Random();
+
+    private final DrawService drawService;
 
     public StarLayer createStarLayer(float lightness, float velocity, int count) {
         Point[] points = new Point[count];
@@ -56,13 +58,10 @@ public class SkyService {
         int starLayersCount = starLayers.length;
         for (int i = 0; i < starLayersCount; i++) {
             StarLayer layer = starLayers[i];
-            glColor3f(layer.getLightness(), layer.getLightness(), layer.getLightness());
+            drawService.setPenColor(layer.getLightness(), layer.getLightness(), layer.getLightness());
 
             for (int j = 0; j < layer.getPoints().length; j++) {
-                Point point = layer.getPoints()[j];
-                glBegin(GL_POINTS);
-                glVertex2f(point.getX(), point.getY());
-                glEnd();
+                drawService.drawPoint(layer.getPoints()[j]);
             }
         }
     }

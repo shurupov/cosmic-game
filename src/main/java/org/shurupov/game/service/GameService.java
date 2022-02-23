@@ -1,30 +1,39 @@
 package org.shurupov.game.service;
 
+import org.shurupov.game.service.process.DrawService;
 import org.shurupov.game.service.process.GraphicSystemService;
 import org.shurupov.game.service.process.SkyService;
+import org.shurupov.game.service.process.SpaceShipService;
 import org.shurupov.game.service.subscribe.GameEventPublisher;
 import org.shurupov.game.service.subscribe.GraphicSubscriber;
 import org.shurupov.game.service.subscribe.SkySubscriber;
+import org.shurupov.game.service.subscribe.SpaceshipSubscriber;
+
+import static org.shurupov.game.service.process.GraphicSystemService.WHK;
 
 public class GameService {
 
     public void run() {
 
-        GraphicSystemService graphicSystemService = new GraphicSystemService();
+        GameEventPublisher gameEventPublisher = new GameEventPublisher();
+
+        GraphicSystemService graphicSystemService = new GraphicSystemService(gameEventPublisher::keyPressed);
+        DrawService drawService = new DrawService(WHK);
 
         GraphicSubscriber graphicSubscriber = new GraphicSubscriber(graphicSystemService);
-        SkySubscriber skySubscriber = new SkySubscriber(new SkyService());
+        SkySubscriber skySubscriber = new SkySubscriber(new SkyService(drawService));
+        SpaceshipSubscriber spaceshipSubscriber = new SpaceshipSubscriber(new SpaceShipService(drawService));
 
-        GameEventPublisher gameEventPublisher = new GameEventPublisher();
 
         gameEventPublisher.addSubscriber(graphicSubscriber);
         gameEventPublisher.addSubscriber(skySubscriber);
+        gameEventPublisher.addSubscriber(spaceshipSubscriber);
 
         try {
 
             gameEventPublisher.init();
 
-            while (!graphicSystemService.isRequestedToClose()) {
+            while (graphicSystemService.isConditionToContinue()) {
                 gameEventPublisher.beforeUpdate();
                 gameEventPublisher.update();
                 gameEventPublisher.render();

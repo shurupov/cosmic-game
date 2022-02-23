@@ -65,4 +65,14 @@ public class GameEventPublisher {
             }
         }
     }
+
+    public void keyPressed(int key) {
+        for (Subscriber subscriber : subscribers) {
+            try {
+                subscriber.onKeyPressed(key);
+            } catch (Throwable e) {
+                System.out.println(e);
+            }
+        }
+    }
 }
